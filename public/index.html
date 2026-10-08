@@ -1,0 +1,57 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DeCA Gestión · Demo</title>
+<style>
+:root{--b:#1d4ed8;--bg:#f4f6fa;--t:#1f2937;--m:#6b7280;--l:#e5e7eb}
+*{box-sizing:border-box}body{margin:0;font:14px system-ui,sans-serif;background:var(--bg);color:var(--t)}
+header{background:#0f172a;color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+header small{color:#94a3b8}main{max-width:1100px;margin:20px auto;padding:0 16px;display:grid;grid-template-columns:420px 1fr;gap:20px}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--l);border-radius:10px;padding:16px}
+h2{margin:0 0 12px;font-size:16px}h3{margin:14px 0 6px;font-size:13px;color:var(--m);text-transform:uppercase;letter-spacing:.04em}
+label{display:block;font-size:12px;color:var(--m);margin:8px 0 2px}
+input,select,textarea{width:100%;padding:7px 9px;border:1px solid #d1d5db;border-radius:6px;font:inherit}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button{background:var(--b);color:#fff;border:0;border-radius:6px;padding:7px 12px;cursor:pointer;font:inherit}
+button.s{background:#fff;color:var(--b);border:1px solid var(--b)}button.g{background:#eef2ff;color:var(--b)}
+.envio{border:1px dashed #cbd5e1;border-radius:8px;padding:8px;margin:8px 0}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--l);vertical-align:top}
+th{font-size:12px;color:var(--m)}.tag{font-size:11px;padding:2px 7px;border-radius:99px;background:#dcfce7;color:#166534}
+.tag.x{background:#fee2e2;color:#991b1b}.acts{display:flex;gap:6px;flex-wrap:wrap}
+.err{background:#fee2e2;color:#991b1b;padding:8px;border-radius:6px;margin-top:8px;display:none}
+dialog{border:0;border-radius:10px;padding:18px;width:min(520px,95vw)}dialog::backdrop{background:#0006}
+.qrbox img{width:200px;border:1px solid var(--l);border-radius:8px}.mono{font:11px monospace;word-break:break-all;color:var(--m)}
+</style></head><body>
+<header><b>DeCA Gestión</b><small>Demo de viabilidad · sin login ni multiempresa</small></header>
+<main>
+<section class="card"><h2>Nuevo DeCA</h2>
+<label>Rol de mi empresa en este envío</label>
+<select id="rol"><option value="TRANSPORTISTA_EFECTIVO">Transportista efectivo</option><option value="CARGADOR_CONTRACTUAL">Cargador contractual</option></select>
+<h3>Cargador contractual</h3><label>Nombre / denominación</label><input id="cNom"><div class="row"><div><label>NIF</label><input id="cNif"></div><div><label>Domicilio</label><input id="cDom"></div></div>
+<h3>Transportista efectivo</h3><div class="row"><div><label>Nombre</label><input id="tNom"></div><div><label>NIF</label><input id="tNif"></div></div>
+<h3>Transporte</h3><div class="row"><div><label>Fecha</label><input id="fecha" type="date"></div><div><label>Matrícula</label><input id="mat" placeholder="1234ABC"></div></div>
+<div class="row"><div><label>Remolque (opcional)</label><input id="rem"></div><div><label>Aut. especial circulación</label><input id="aut"></div></div>
+<h3>Envíos <button class="g" type="button" onclick="addEnvio()">+ envío</button></h3><div id="envios"></div>
+<label>Observaciones</label><textarea id="obs" rows="2"></textarea>
+<div class="err" id="err"></div><p><button onclick="crear()">Generar DeCA</button> <button class="s" onclick="demo()">Rellenar ejemplo</button></p></section>
+<section class="card"><h2>Documentos</h2><table><thead><tr><th>Nº</th><th>Fecha</th><th>Ruta</th><th>Estado</th><th></th></tr></thead><tbody id="lista"></tbody></table></section>
+</main>
+<dialog id="dq"><h2 id="dqT"></h2><div class="qrbox"><img id="dqI"></div><p class="mono" id="dqU"></p><p><button class="s" onclick="dq.close()">Cerrar</button></p></dialog>
+<dialog id="dm"><h2>Modificar DeCA</h2>
+<label>Método</label><select id="mMet"><option value="NUEVO_PDF">B · Generar PDF nuevo (nueva URL y QR; el original se conserva)</option><option value="MISMO_PDF">A · Modificar el mismo PDF (misma URL y QR)</option></select>
+<label>Motivo del cambio *</label><input id="mMot"><div class="row"><div><label>Matrícula</label><input id="mMat"></div><div><label>Remolque</label><input id="mRem"></div></div>
+<div class="row"><div><label>Fecha</label><input id="mFec" type="date"></div><div><label>Observaciones</label><input id="mObs"></div></div>
+<div class="err" id="mErr"></div><p><button onclick="modificar()">Aplicar</button> <button class="s" onclick="dm.close()">Cancelar</button></p></dialog>
+<script>
+const $=i=>document.getElementById(i);let cur=null,all=[];
+function addEnvio(v={}){const d=document.createElement('div');d.className='envio';d.innerHTML=`<div class="row"><div><label>Origen</label><input class="o" value="${v.origen||''}"></div><div><label>Destino</label><input class="d" value="${v.destino||''}"></div></div><div class="row"><div><label>Mercancía</label><input class="n" value="${v.naturaleza||''}"></div><div><label>Peso (kg)</label><input class="p" type="number" value="${v.pesoKg||''}"></div></div>`;$('envios').appendChild(d)}
+function demo(){$('rol').value='TRANSPORTISTA_EFECTIVO';cNom.value='Logística Norte S.L.';cNif.value='B12345678';cDom.value='C/ Mayor 1, 37001 Salamanca';tNom.value='Transportes Duero S.L.';tNif.value='B87654321';fecha.value=new Date().toISOString().slice(0,10);mat.value='1234ABC';rem.value='R1234BCD';$('envios').innerHTML='';addEnvio({origen:'Salamanca',destino:'Madrid',naturaleza:'Palés de cerámica',pesoKg:18000});addEnvio({origen:'Salamanca',destino:'Toledo',naturaleza:'Material de construcción',pesoKg:6000})}
+async function crear(){const envios=[...document.querySelectorAll('.envio')].map(e=>({origen:e.querySelector('.o').value,destino:e.querySelector('.d').value,naturaleza:e.querySelector('.n').value,pesoKg:e.querySelector('.p').value}));
+const body={rolEmpresa:rol.value,cargador:{nombre:cNom.value,nif:cNif.value,domicilio:cDom.value},transportista:{nombre:tNom.value,nif:tNif.value},fechaTransporte:fecha.value,matricula:mat.value,remolque:rem.value,autorizacionEspecial:aut.value,observaciones:obs.value,envios};
+const r=await fetch('/api/deca',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();
+if(!r.ok){err.textContent=j.error;err.style.display='block';return}err.style.display='none';await cargar();qr(j.id)}
+async function cargar(){all=await (await fetch('/api/deca')).json();lista.innerHTML=all.length?all.map(d=>`<tr><td><b>${d.numero}</b><br><small>v${d.versiones.length+1}</small></td><td>${d.fechaTransporte}</td><td>${d.envios.map(e=>e.origen+' → '+e.destino).join('<br>')}</td><td><span class="tag ${d.estado==='SUSTITUIDO'?'x':''}">${d.estado}</span></td><td class="acts"><button class="g" onclick="window.open('${d.url}')">PDF</button><button class="g" onclick="qr('${d.id}')">QR</button>${d.estado==='VIGENTE'?`<button class="s" onclick="mod('${d.id}')">Modificar</button>`:''}</td></tr>`).join(''):'<tr><td colspan=5>Sin documentos. Pulsa «Rellenar ejemplo».</td></tr>'}
+function qr(id){const d=all.find(x=>x.id===id);dqT.textContent=d.numero;dqI.src=d.url+'/qr.png';dqU.textContent=d.url;dq.showModal()}
+function mod(id){cur=all.find(x=>x.id===id);mMat.value=cur.matricula;mRem.value=cur.remolque;mFec.value=cur.fechaTransporte;mObs.value=cur.observaciones;mMot.value='';mErr.style.display='none';dm.showModal()}
+async function modificar(){const r=await fetch(`/api/deca/${cur.id}/modificar`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({metodo:mMet.value,motivo:mMot.value,cambios:{matricula:mMat.value,remolque:mRem.value,fechaTransporte:mFec.value,observaciones:mObs.value}})});const j=await r.json();if(!r.ok){mErr.textContent=j.error;mErr.style.display='block';return}dm.close();await cargar();qr(j.id)}
+addEnvio();cargar();
+</script></body></html>
