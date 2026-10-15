@@ -1,57 +1,137 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DeCA Gestión · Demo</title>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DeCA Gestión</title>
 <style>
-:root{--b:#1d4ed8;--bg:#f4f6fa;--t:#1f2937;--m:#6b7280;--l:#e5e7eb}
-*{box-sizing:border-box}body{margin:0;font:14px system-ui,sans-serif;background:var(--bg);color:var(--t)}
-header{background:#0f172a;color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
-header small{color:#94a3b8}main{max-width:1100px;margin:20px auto;padding:0 16px;display:grid;grid-template-columns:420px 1fr;gap:20px}
-@media(max-width:900px){main{grid-template-columns:1fr}}
-.card{background:#fff;border:1px solid var(--l);border-radius:10px;padding:16px}
-h2{margin:0 0 12px;font-size:16px}h3{margin:14px 0 6px;font-size:13px;color:var(--m);text-transform:uppercase;letter-spacing:.04em}
-label{display:block;font-size:12px;color:var(--m);margin:8px 0 2px}
-input,select,textarea{width:100%;padding:7px 9px;border:1px solid #d1d5db;border-radius:6px;font:inherit}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-button{background:var(--b);color:#fff;border:0;border-radius:6px;padding:7px 12px;cursor:pointer;font:inherit}
-button.s{background:#fff;color:var(--b);border:1px solid var(--b)}button.g{background:#eef2ff;color:var(--b)}
-.envio{border:1px dashed #cbd5e1;border-radius:8px;padding:8px;margin:8px 0}
-table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--l);vertical-align:top}
-th{font-size:12px;color:var(--m)}.tag{font-size:11px;padding:2px 7px;border-radius:99px;background:#dcfce7;color:#166534}
-.tag.x{background:#fee2e2;color:#991b1b}.acts{display:flex;gap:6px;flex-wrap:wrap}
-.err{background:#fee2e2;color:#991b1b;padding:8px;border-radius:6px;margin-top:8px;display:none}
-dialog{border:0;border-radius:10px;padding:18px;width:min(520px,95vw)}dialog::backdrop{background:#0006}
-.qrbox img{width:200px;border:1px solid var(--l);border-radius:8px}.mono{font:11px monospace;word-break:break-all;color:var(--m)}
+:root{--ink:#14232b;--bg:#eceff1;--line:#d5dbe0;--amb:#f2b01e;--teal:#0e5a63;--mut:#5d6b73;--red:#b3261e}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 "Bahnschrift","DIN Alternate","Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--ink);color:#fff;padding:0 20px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+header b{font-size:17px;padding:14px 0}header b i{font-style:normal;color:var(--amb)}
+nav{display:flex;flex-wrap:wrap}nav button{background:none;color:#b9c4ca;border:0;border-bottom:3px solid transparent;padding:16px 12px 13px;font:inherit;cursor:pointer}
+nav button.on{color:#fff;border-color:var(--amb)}
+main{max-width:1050px;margin:20px auto;padding:0 14px}h2{margin:0 0 12px;font-size:20px}h3{margin:16px 0 6px;font-size:14px;color:var(--teal)}
+.card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:16px;margin-bottom:14px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}.e{margin-bottom:8px;padding:8px;border-left:3px solid var(--amb);background:#f7f8f9}
+label{display:block;font-size:12px;color:var(--mut)}input,select{display:block;width:100%;margin-top:3px;padding:8px;border:1px solid #bcc6cc;border-radius:4px;font:inherit;color:var(--ink);background:#fff}
+button{background:var(--teal);color:#fff;border:0;border-radius:4px;padding:8px 13px;font:inherit;cursor:pointer}button.s{background:#fff;color:var(--teal);border:1px solid var(--teal)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--amb);outline-offset:1px}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:12px;color:var(--mut);font-weight:600}
+.a{display:flex;gap:5px;flex-wrap:wrap}.a button{padding:5px 9px}.mut{color:var(--mut)}.tag{padding:2px 8px;border-radius:9px;background:#d9efe3;color:#14532d;font-size:12px}.tag.x{background:#f6d6d3;color:#7a1710}
+.err{display:none;margin-top:10px;padding:9px;border-radius:4px;background:#f6d6d3;color:#7a1710}.err.ok{background:#d9efe3;color:#14532d}
+#m{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:12px}#m>div{background:#fff;border-radius:6px;padding:14px;width:min(560px,100%);max-height:96vh;overflow:auto}
+#m iframe{width:100%;height:70vh;border:1px solid var(--line)}#m img{width:min(340px,100%);image-rendering:pixelated;display:block;margin:auto}
+#gate{max-width:340px;margin:18vh auto;text-align:center}.sm{font-size:12px;word-break:break-all}
 </style></head><body>
-<header><b>DeCA Gestión</b><small>Demo de viabilidad · sin login ni multiempresa</small></header>
-<main>
-<section class="card"><h2>Nuevo DeCA</h2>
-<label>Rol de mi empresa en este envío</label>
-<select id="rol"><option value="TRANSPORTISTA_EFECTIVO">Transportista efectivo</option><option value="CARGADOR_CONTRACTUAL">Cargador contractual</option></select>
-<h3>Cargador contractual</h3><label>Nombre / denominación</label><input id="cNom"><div class="row"><div><label>NIF</label><input id="cNif"></div><div><label>Domicilio</label><input id="cDom"></div></div>
-<h3>Transportista efectivo</h3><div class="row"><div><label>Nombre</label><input id="tNom"></div><div><label>NIF</label><input id="tNif"></div></div>
-<h3>Transporte</h3><div class="row"><div><label>Fecha</label><input id="fecha" type="date"></div><div><label>Matrícula</label><input id="mat" placeholder="1234ABC"></div></div>
-<div class="row"><div><label>Remolque (opcional)</label><input id="rem"></div><div><label>Aut. especial circulación</label><input id="aut"></div></div>
-<h3>Envíos <button class="g" type="button" onclick="addEnvio()">+ envío</button></h3><div id="envios"></div>
-<label>Observaciones</label><textarea id="obs" rows="2"></textarea>
-<div class="err" id="err"></div><p><button onclick="crear()">Generar DeCA</button> <button class="s" onclick="demo()">Rellenar ejemplo</button></p></section>
-<section class="card"><h2>Documentos</h2><table><thead><tr><th>Nº</th><th>Fecha</th><th>Ruta</th><th>Estado</th><th></th></tr></thead><tbody id="lista"></tbody></table></section>
-</main>
-<dialog id="dq"><h2 id="dqT"></h2><div class="qrbox"><img id="dqI"></div><p class="mono" id="dqU"></p><p><button class="s" onclick="dq.close()">Cerrar</button></p></dialog>
-<dialog id="dm"><h2>Modificar DeCA</h2>
-<label>Método</label><select id="mMet"><option value="NUEVO_PDF">B · Generar PDF nuevo (nueva URL y QR; el original se conserva)</option><option value="MISMO_PDF">A · Modificar el mismo PDF (misma URL y QR)</option></select>
-<label>Motivo del cambio *</label><input id="mMot"><div class="row"><div><label>Matrícula</label><input id="mMat"></div><div><label>Remolque</label><input id="mRem"></div></div>
-<div class="row"><div><label>Fecha</label><input id="mFec" type="date"></div><div><label>Observaciones</label><input id="mObs"></div></div>
-<div class="err" id="mErr"></div><p><button onclick="modificar()">Aplicar</button> <button class="s" onclick="dm.close()">Cancelar</button></p></dialog>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<div id="app"></div><div id="m"><div id="mb"></div></div>
 <script>
-const $=i=>document.getElementById(i);let cur=null,all=[];
-function addEnvio(v={}){const d=document.createElement('div');d.className='envio';d.innerHTML=`<div class="row"><div><label>Origen</label><input class="o" value="${v.origen||''}"></div><div><label>Destino</label><input class="d" value="${v.destino||''}"></div></div><div class="row"><div><label>Mercancía</label><input class="n" value="${v.naturaleza||''}"></div><div><label>Peso (kg)</label><input class="p" type="number" value="${v.pesoKg||''}"></div></div>`;$('envios').appendChild(d)}
-function demo(){$('rol').value='TRANSPORTISTA_EFECTIVO';cNom.value='Logística Norte S.L.';cNif.value='B12345678';cDom.value='C/ Mayor 1, 37001 Salamanca';tNom.value='Transportes Duero S.L.';tNif.value='B87654321';fecha.value=new Date().toISOString().slice(0,10);mat.value='1234ABC';rem.value='R1234BCD';$('envios').innerHTML='';addEnvio({origen:'Salamanca',destino:'Madrid',naturaleza:'Palés de cerámica',pesoKg:18000});addEnvio({origen:'Salamanca',destino:'Toledo',naturaleza:'Material de construcción',pesoKg:6000})}
-async function crear(){const envios=[...document.querySelectorAll('.envio')].map(e=>({origen:e.querySelector('.o').value,destino:e.querySelector('.d').value,naturaleza:e.querySelector('.n').value,pesoKg:e.querySelector('.p').value}));
-const body={rolEmpresa:rol.value,cargador:{nombre:cNom.value,nif:cNif.value,domicilio:cDom.value},transportista:{nombre:tNom.value,nif:tNif.value},fechaTransporte:fecha.value,matricula:mat.value,remolque:rem.value,autorizacionEspecial:aut.value,observaciones:obs.value,envios};
-const r=await fetch('/api/deca',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();
-if(!r.ok){err.textContent=j.error;err.style.display='block';return}err.style.display='none';await cargar();qr(j.id)}
-async function cargar(){all=await (await fetch('/api/deca')).json();lista.innerHTML=all.length?all.map(d=>`<tr><td><b>${d.numero}</b><br><small>v${d.versiones.length+1}</small></td><td>${d.fechaTransporte}</td><td>${d.envios.map(e=>e.origen+' → '+e.destino).join('<br>')}</td><td><span class="tag ${d.estado==='SUSTITUIDO'?'x':''}">${d.estado}</span></td><td class="acts"><button class="g" onclick="window.open('${d.url}')">PDF</button><button class="g" onclick="qr('${d.id}')">QR</button>${d.estado==='VIGENTE'?`<button class="s" onclick="mod('${d.id}')">Modificar</button>`:''}</td></tr>`).join(''):'<tr><td colspan=5>Sin documentos. Pulsa «Rellenar ejemplo».</td></tr>'}
-function qr(id){const d=all.find(x=>x.id===id);dqT.textContent=d.numero;dqI.src=d.url+'/qr.png';dqU.textContent=d.url;dq.showModal()}
-function mod(id){cur=all.find(x=>x.id===id);mMat.value=cur.matricula;mRem.value=cur.remolque;mFec.value=cur.fechaTransporte;mObs.value=cur.observaciones;mMot.value='';mErr.style.display='none';dm.showModal()}
-async function modificar(){const r=await fetch(`/api/deca/${cur.id}/modificar`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({metodo:mMet.value,motivo:mMot.value,cambios:{matricula:mMat.value,remolque:mRem.value,fechaTransporte:mFec.value,observaciones:mObs.value}})});const j=await r.json();if(!r.ok){mErr.textContent=j.error;mErr.style.display='block';return}dm.close();await cargar();qr(j.id)}
-addEnvio();cargar();
+// ===== Capa de datos: hoy localStorage; mañana se sustituye por fetch() al backend/Postgres/n8n =====
+const L=k=>JSON.parse(localStorage.getItem(k)||'null'),S=(k,v)=>localStorage.setItem(k,JSON.stringify(v)),rows=k=>L(k)||[];
+const CLAVE='Lasautt2026',NIF=/^[A-Z0-9][0-9]{7}[A-Z0-9]$/i,MAT=/^[A-Z0-9 -]{4,10}$/i;
+const $=s=>document.querySelector(s),uid=()=>crypto.randomUUID(),fmt=s=>new Date(s).toLocaleString('es-ES');
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const VEH=[['matricula','Matrícula'],['tipo','Tipo'],['marca','Marca'],['modelo','Modelo'],['carga','Carga máx. (kg)','number']];
+const ENT={conductores:{t:'Conductores',f:[['nombre','Nombre'],['telefono','Teléfono'],['email','Email']]},
+camiones:{t:'Camiones',f:[...VEH,['remolqueId','Remolque habitual','remolques']]},remolques:{t:'Remolques',f:VEH},
+terceros:{t:'Clientes y transportistas',f:[['nombre','Nombre'],['nif','NIF'],['domicilio','Domicilio']]}};
+const lab=(k,o)=>!o?'':k==='conductores'?o.nombre:k==='terceros'?`${o.nombre} (${o.nif})`:`${o.matricula} · ${o.marca} ${o.modelo}`;
+const opts=(k,sel)=>'<option value="">Selecciona…</option>'+rows(k).map(o=>`<option value="${o.id}"${o.id===sel?' selected':''}>${esc(lab(k,o))}</option>`).join('');
+let tab='deca',edit=null;
+function showErr(t,ok){const e=$('#err');if(!e)return;e.textContent=t;e.className='err'+(ok?' ok':'');e.style.display='block'}
+function go(){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab||(tab==='new'&&b.dataset.t==='deca')));
+$('#v').innerHTML=tab==='deca'?list():tab==='new'?dForm():tab==='empresa'?emp():crud(tab);if(tab==='new')lbl()}
+// ===== Empresa y datos maestros =====
+function emp(){const e=L('empresa')||{};return `<h2>Mi empresa</h2><div class=card><div class=g>${[['nombre','Nombre'],['nif','NIF'],['domicilio','Domicilio']].map(([f,l])=>`<label>${l}<input id=e_${f} value="${esc(e[f])}"></label>`).join('')}</div><p><button onclick="saveEmp()">Guardar empresa</button></p><div class=err id=err></div></div>`}
+function saveEmp(){const o={};for(const f of['nombre','nif','domicilio'])o[f]=$('#e_'+f).value.trim();
+if(!o.nombre||!o.domicilio||!NIF.test(o.nif))return showErr('Completa nombre, domicilio y un NIF válido (ej. B12345678).');S('empresa',o);showErr('Empresa guardada.',1)}
+function crud(k){const e=ENT[k],r=rows(k),c=r.find(x=>x.id===edit)||{};
+return `<h2>${e.t}</h2><div class=card><div class=g>${e.f.map(([f,l,t])=>`<label>${l}${t&&t!=='number'?`<select id=f_${f}>${opts(t,c[f])}</select>`:`<input id=f_${f} type=${t||'text'} value="${esc(c[f])}">`}</label>`).join('')}</div>
+<p><button onclick="saveE('${k}')">${edit?'Guardar cambios':'Añadir'}</button>${edit?` <button class=s onclick="edit=null;go()">Cancelar</button>`:''}</p><div class=err id=err></div></div>
+<div class=card>${r.length?`<table><tr>${e.f.map(f=>`<th>${f[1]}</th>`).join('')}<th></th></tr>${r.map(o=>`<tr>${e.f.map(([f,,t])=>`<td>${esc(t&&t!=='number'?lab(t,rows(t).find(x=>x.id===o[f])):o[f])}</td>`).join('')}<td class=a><button class=s onclick="edit='${o.id}';go()">Editar</button><button class=s onclick="delE('${k}','${o.id}')">Borrar</button></td></tr>`).join('')}</table>`:'<p class=mut>Aún no hay registros. Añade el primero arriba.</p>'}</div>`}
+function saveE(k){const e=ENT[k],o={};for(const[f]of e.f)o[f]=$('#f_'+f).value.trim();
+const opt=['remolqueId','telefono','email'];if(e.f.some(([f])=>!o[f]&&!opt.includes(f)))return showErr('Completa todos los campos obligatorios.');
+if(k==='terceros'&&!NIF.test(o.nif))return showErr('NIF no válido.');if(o.matricula&&!MAT.test(o.matricula))return showErr('Matrícula no válida.');
+if(o.carga!==undefined&&!(+o.carga>0))return showErr('La carga máxima debe ser mayor que 0.');
+if(o.matricula)o.matricula=o.matricula.toUpperCase();const r=rows(k);
+if(edit)Object.assign(r.find(x=>x.id===edit),o);else r.push({id:uid(),...o});S(k,r);edit=null;go()}
+function delE(k,id){if(!confirm('¿Borrar este registro? Los DeCA ya emitidos no cambian.'))return;S(k,rows(k).filter(x=>x.id!==id));go()}
+function seed(){S('empresa',{nombre:'Transportes Duero S.L.',nif:'B87654321',domicilio:'C/ Mayor 1, 37001 Salamanca'});
+S('conductores',[{id:uid(),nombre:'Luis Prieto',telefono:'600111222',email:'luis@duero.es'},{id:uid(),nombre:'Marta Gil',telefono:'600333444',email:'marta@duero.es'}]);
+const r=[{id:uid(),matricula:'R1234BCD',tipo:'Lona',marca:'Schmitz',modelo:'SCS',carga:26000},{id:uid(),matricula:'R5678DFG',tipo:'Frigorífico',marca:'Krone',modelo:'Cool Liner',carga:24000}];S('remolques',r);
+S('camiones',[{id:uid(),matricula:'1234ABC',tipo:'Tractora',marca:'Volvo',modelo:'FH 460',carga:40000,remolqueId:r[0].id},{id:uid(),matricula:'5678DEF',tipo:'Tractora',marca:'Scania',modelo:'R450',carga:40000,remolqueId:r[1].id}]);
+S('terceros',[{id:uid(),nombre:'Cerámicas Norte S.L.',nif:'B12345678',domicilio:'Pol. Ind. 4, 37008 Salamanca'},{id:uid(),nombre:'Obras Castilla S.A.',nif:'A11223344',domicilio:'Av. Toledo 22, 45001 Toledo'}]);go()}
+// ===== DeCA: formulario con desplegables =====
+const envRow=(e={})=>`<div class="g e"><label>Origen<input class=o value="${esc(e.origen)}"></label><label>Destino<input class=d value="${esc(e.destino)}"></label><label>Mercancía<input class=n value="${esc(e.naturaleza)}"></label><label>Peso (kg)<input class=p type=number value="${esc(e.pesoKg)}"></label></div>`;
+const addEnv=()=>$('#env').insertAdjacentHTML('beforeend',envRow());
+function lbl(){$('#tl').textContent=$('#rol').value==='CARGADOR_CONTRACTUAL'?'Transportista efectivo (la otra parte)':'Cargador contractual (la otra parte)'}
+function autoRem(){const c=rows('camiones').find(o=>o.id===$('#cam').value);if(c?.remolqueId)$('#rem').value=c.remolqueId}
+function dForm(){const d=rows('decas').find(x=>x.id===edit),i=d?.ids||{},x=d?.data||{};
+return `<h2>${d?'Modificar '+d.numero:'Nuevo DeCA'}</h2><div class=card><div class=g>
+<label>Mi empresa actúa como<select id=rol onchange=lbl()><option value=TRANSPORTISTA_EFECTIVO>Transportista efectivo</option><option value=CARGADOR_CONTRACTUAL${x.rol==='CARGADOR_CONTRACTUAL'?' selected':''}>Cargador contractual</option></select></label>
+<label><span id=tl></span><select id=ter>${opts('terceros',i.ter)}</select></label>
+<label>Camión<select id=cam onchange=autoRem()>${opts('camiones',i.cam)}</select></label><label>Remolque<select id=rem>${opts('remolques',i.rem)}</select></label>
+<label>Conductor<select id=con>${opts('conductores',i.con)}</select></label><label>Fecha de transporte<input id=fec type=date value="${esc(x.fecha)}"></label>
+<label>Autorización especial (opcional)<input id=aut value="${esc(x.aut)}"></label><label>Observaciones (opcional)<input id=obs value="${esc(x.obs)}"></label></div>
+<h3>Envíos</h3><div id=env>${(x.envios||[{}]).map(envRow).join('')}</div><button class=s onclick="addEnv()">Añadir otro envío</button>
+${d?`<h3>Datos del cambio</h3><div class=g><label>Método<select id=met><option value=NUEVO_PDF>B · PDF nuevo con QR nuevo (el original se conserva)</option><option value=MISMO_PDF>A · Mismo PDF y QR (la versión anterior se guarda)</option></select></label><label>Motivo del cambio<input id=mot></label></div>`:''}
+<div class=err id=err></div><p><button onclick="saveD()">${d?'Aplicar modificación':'Generar DeCA'}</button> <button class=s onclick="edit=null;tab='deca';go()">Cancelar</button></p></div>`}
+function saveD(){const emp=L('empresa'),g=id=>$('#'+id).value,pk=(k,id)=>rows(k).find(o=>o.id===g(id));
+const ter=pk('terceros','ter'),cam=pk('camiones','cam'),rem=pk('remolques','rem'),con=pk('conductores','con');
+const env=[...document.querySelectorAll('.e')].map(e=>({origen:e.querySelector('.o').value.trim(),destino:e.querySelector('.d').value.trim(),naturaleza:e.querySelector('.n').value.trim(),pesoKg:+e.querySelector('.p').value}));
+const er=[];if(!emp)er.push('Configura primero los datos de tu empresa.');if(!ter)er.push('Selecciona la otra parte del contrato.');if(!cam)er.push('Selecciona un camión.');if(!con)er.push('Selecciona un conductor.');if(!g('fec'))er.push('Indica la fecha.');
+if(env.some(e=>!e.origen||!e.destino||!e.naturaleza||!(e.pesoKg>0)))er.push('Completa origen, destino, mercancía y peso (mayor que 0) en cada envío.');
+if(edit&&!g('mot').trim())er.push('El motivo del cambio es obligatorio.');if(er.length)return showErr(er.join(' '));
+const own={nombre:emp.nombre,nif:emp.nif,domicilio:emp.domicilio},rol=g('rol'),o2={nombre:ter.nombre,nif:ter.nif,domicilio:ter.domicilio},
+data={rol,cargador:rol==='CARGADOR_CONTRACTUAL'?own:o2,transportista:rol==='TRANSPORTISTA_EFECTIVO'?own:o2,fecha:g('fec'),matricula:cam.matricula,remolque:rem?.matricula||'',conductor:con.nombre,aut:g('aut').trim(),obs:g('obs').trim(),envios:env},
+ids={ter:ter.id,cam:cam.id,rem:rem?.id||'',con:con.id},ds=rows('decas'),now=new Date().toISOString();
+const mk=(x={})=>({id:uid(),numero:`DECA-${new Date().getFullYear()}-${String(ds.length+1).padStart(4,'0')}`,estado:'VIGENTE',createdAt:now,modifiedAt:now,data,ids,versiones:[],...x});
+if(!edit)ds.push(mk());else{const d=ds.find(x=>x.id===edit);
+if(g('met')==='MISMO_PDF'){d.versiones.push({fecha:now,motivo:g('mot').trim(),data:d.data});d.data=data;d.ids=ids;d.modifiedAt=now}
+else{const n=mk({sustituyeA:{id:d.id,numero:d.numero},motivo:g('mot').trim()});d.estado='SUSTITUIDO';d.sustituidoPor={id:n.id,numero:n.numero};d.modifiedAt=now;ds.push(n)}}
+S('decas',ds);edit=null;tab='deca';go()}
+function list(){const ds=rows('decas').slice().reverse();
+if(!L('empresa'))return `<h2>Bienvenido</h2><div class=card><p>Empieza configurando tu empresa y tus datos (conductores, camiones, remolques y clientes). Después, el formulario del DeCA los ofrece en desplegables.</p><p><button onclick="seed()">Cargar datos de ejemplo</button> <button class=s onclick="tab='empresa';go()">Configurar a mano</button></p></div>`;
+return `<h2>Documentos DeCA</h2><p><button onclick="edit=null;tab='new';go()">Nuevo DeCA</button></p><div class=card>${ds.length?`<table><tr><th>Nº</th><th>Fecha</th><th>Ruta</th><th>Estado</th><th></th></tr>${ds.map(d=>`<tr><td><b>${d.numero}</b><br><span class=mut>v${d.versiones.length+1}${d.sustituyeA?' · sustituye a '+d.sustituyeA.numero:''}</span></td><td>${d.data.fecha}</td><td>${d.data.envios.map(e=>esc(e.origen+' - '+e.destino)).join('<br>')}</td><td><span class="tag${d.estado==='SUSTITUIDO'?' x':''}">${d.estado}</span></td>
+<td class=a><button onclick="showPdf('${d.id}')">PDF</button><button class=s onclick="showQr('${d.id}')">QR</button>${d.estado==='VIGENTE'?`<button class=s onclick="edit='${d.id}';tab='new';go()">Modificar</button>`:''}${d.versiones.map((v,i)=>`<button class=s onclick="showPdf('${d.id}',${i})">PDF v${i+1}</button>`).join('')}</td></tr>`).join('')}</table>`:'<p class=mut>Todavía no hay documentos. Pulsa «Nuevo DeCA».</p>'}</div>`}
+// ===== QR y enlace autocontenido (en producción será /d/:token del backend) =====
+const b64=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const zip=async(s,c)=>new Uint8Array(await new Response(new Blob([s]).stream().pipeThrough(new(c?CompressionStream:DecompressionStream)('deflate-raw'))).arrayBuffer());
+const link=async d=>location.href.split('#')[0]+'#d='+b64(await zip(JSON.stringify({...d,ids:0}),1));
+const unlink=async s=>JSON.parse(new TextDecoder().decode(await zip(Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0)),0)));
+function qrPng(u,px=5){const q=qrcode(0,'M');q.addData(u);q.make();const n=q.getModuleCount(),c=document.createElement('canvas'),t=c.getContext('2d');c.width=c.height=(n+4)*px;t.fillStyle='#fff';t.fillRect(0,0,c.width,c.height);t.fillStyle='#000';
+for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(q.isDark(r,k))t.fillRect((k+2)*px,(r+2)*px,px,px);return c.toDataURL('image/png')}
+const modal=h=>{$('#mb').innerHTML=h;$('#m').style.display='flex'},closeM=()=>$('#m').style.display='none';
+async function showQr(id){const d=rows('decas').find(x=>x.id===id),u=await link(d);let img;
+try{img=qrPng(u)}catch(e){return modal('<p>Este DeCA tiene demasiados datos para el QR de la demo. En la versión con backend el QR solo llevará una URL corta.</p><button onclick=closeM()>Cerrar</button>')}
+window._u=u;modal(`<h2>${d.numero}</h2><img src="${img}" alt="QR del DeCA"><p class="sm mut">Al escanearlo se abre el PDF. En la demo el enlace lleva los datos dentro; con backend será una URL corta.</p><p><button onclick="navigator.clipboard.writeText(_u)">Copiar enlace</button> <button class=s onclick="window.open(_u)">Abrir enlace</button> <button class=s onclick=closeM()>Cerrar</button></p>`)}
+// ===== PDF nativo (jsPDF): texto seleccionable + QR =====
+const FL={rol:'Rol',cargador:'Cargador',transportista:'Transportista',fecha:'Fecha',matricula:'Matrícula',remolque:'Remolque',conductor:'Conductor',aut:'Autorización especial',obs:'Observaciones',envios:'Envíos'};
+const fv=(k,x)=>k==='envios'?x.envios.map(e=>`${e.origen}-${e.destino} ${e.naturaleza} ${e.pesoKg}kg`).join(' | '):(k==='cargador'||k==='transportista')?`${x[k].nombre} ${x[k].nif}`:x[k]||'(vacío)';
+function pdf(d,vi,url){const old=vi!=null,x=old?d.versiones[vi].data:d.data,doc=new jspdf.jsPDF({unit:'mm',format:'a4'});let y=18;
+doc.setProperties({title:'DeCA '+d.numero,subject:'Documento electrónico de control administrativo',creator:'DeCA Gestión (demo)'});doc.setCreationDate(new Date(d.createdAt));
+const T=(s,sz=10,b=0,c=[20,35,43],st=0)=>{doc.setFont('helvetica',b?'bold':'normal').setFontSize(sz).setTextColor(...c);
+for(const l of doc.splitTextToSize(String(s),y<62?128:182)){doc.text(l,15,y);if(st)doc.line(15,y-1.3,15+doc.getTextWidth(l),y-1.3);y+=sz*.42+1.4}};
+const S=t=>{y+=2;T(t,11,1,[14,90,99])};
+T('DOCUMENTO ELECTRÓNICO DE CONTROL ADMINISTRATIVO (DeCA)',13,1);T(`Nº ${d.numero}  ·  Versión ${old?vi+1+' (anterior, no vigente)':d.versiones.length+1}`);
+T('Creado: '+fmt(d.createdAt));T('Última modificación: '+fmt(d.modifiedAt));
+if(d.estado==='SUSTITUIDO')T(`DOCUMENTO SUSTITUIDO, NO VÁLIDO. Ver ${d.sustituidoPor.numero}.`,10,1,[179,38,30]);
+if(d.sustituyeA)T(`Sustituye a ${d.sustituyeA.numero}. Motivo: ${d.motivo}`);
+doc.addImage(qrPng(url,4),'PNG',150,12,45,45);doc.setFontSize(7).text('Escanee para obtener este documento',150,60);y=Math.max(y,66);
+S('Cargador contractual');T(`${x.cargador.nombre}  ·  NIF ${x.cargador.nif}`);T('Domicilio: '+x.cargador.domicilio);
+S('Transportista efectivo');T(`${x.transportista.nombre}  ·  NIF ${x.transportista.nif}`);
+S('Transporte');T('Fecha de realización: '+x.fecha);T(`Vehículo: ${x.matricula}${x.remolque?'  ·  Remolque: '+x.remolque:''}`);T('Conductor: '+x.conductor);if(x.aut)T('Autorización especial de circulación: '+x.aut);
+S(x.envios.length>1?'Envíos (el orden no implica orden de ejecución)':'Envío');x.envios.forEach((e,i)=>{T(`Envío ${i+1}: ${e.origen} -> ${e.destino}`,10,1);T(`${e.naturaleza}  ·  ${e.pesoKg} kg`)});
+if(x.obs){S('Observaciones');T(x.obs)}
+if(!old&&d.versiones.length){S('Historial de modificaciones');d.versiones.forEach((v,i)=>{const nx=i+1<d.versiones.length?d.versiones[i+1].data:d.data;
+T(`${fmt(v.fecha)}  ·  Motivo: ${v.motivo}`,10,1);Object.keys(FL).filter(k=>fv(k,v.data)!==fv(k,nx)).forEach(k=>{T(`${FL[k]} anterior (YA NO VÁLIDO): ${fv(k,v.data)}`,9,0,[179,38,30],1)})})}
+doc.setFontSize(7).setTextColor(100).text('Versión de demostración. No sustituye la validación normativa.',15,288);return doc}
+let cur;async function showPdf(id,vi){const d=rows('decas').find(x=>x.id===id);cur=pdf(d,vi,await link(d));
+modal(`<iframe src="${cur.output('bloburl')}" title="PDF"></iframe><p><button onclick="cur.save('${d.numero}.pdf')">Descargar PDF</button> <button class=s onclick=closeM()>Cerrar</button></p>`)}
+// ===== Arranque: enlace del QR (sin login) o app con clave =====
+async function boot(){const h=location.hash;
+if(h.startsWith('#d=')){try{const d=await unlink(h.slice(3)),doc=pdf(d,null,location.href);cur=doc;
+$('#app').innerHTML=`<iframe src="${doc.output('bloburl')}" style="position:fixed;inset:0 0 52px;width:100%;height:calc(100% - 52px);border:0"></iframe><p style="position:fixed;bottom:0;margin:0;padding:10px;width:100%;background:#fff"><button onclick="cur.save('${d.numero}.pdf')">Descargar PDF</button></p>`}catch(e){$('#app').innerHTML='<p style="padding:20px">Enlace no válido.</p>'}return}
+if(sessionStorage.ok)return start();
+$('#app').innerHTML=`<div id=gate class=card><h2>DeCA Gestión</h2><p class=mut>Acceso a la demo</p><input id=pw type=password placeholder="Clave"><p><button onclick="if($('#pw').value===CLAVE){sessionStorage.ok=1;start()}else $('#pw').style.borderColor='#b3261e'">Entrar</button></p></div>`;
+$('#pw').addEventListener('keydown',e=>{if(e.key==='Enter')e.target.nextElementSibling.firstElementChild.click()})}
+function start(){$('#app').innerHTML=`<header><b>DeCA <i>Gestión</i></b><nav>${[['deca','DeCA'],['empresa','Mi empresa'],['conductores','Conductores'],['camiones','Camiones'],['remolques','Remolques'],['terceros','Clientes y transportistas']].map(([t,l])=>`<button data-t=${t} onclick="tab='${t}';edit=null;go()">${l}</button>`).join('')}</nav></header><main id=v></main>`;go()}
+boot();
 </script></body></html>
