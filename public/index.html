@@ -24,7 +24,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 8px
 .mn div{position:absolute;right:0;z-index:3;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:5px;min-width:150px;box-shadow:0 8px 24px #0f223333}
 .err{display:none;margin-top:10px;padding:9px;border-radius:6px;background:#fde0e0;color:#8f2323}.err.ok{background:#d6f3ea;color:#0b5e49}
 #m{position:fixed;inset:0;background:#0f2233aa;display:none;align-items:center;justify-content:center;padding:12px;z-index:9}#m>div{background:#fff;border-radius:10px;padding:16px;width:min(560px,100%);max-height:96vh;overflow:auto}
-#m iframe{width:100%;height:70vh;border:1px solid var(--line)}#m img{width:min(340px,100%);image-rendering:pixelated;display:block;margin:auto}
+#m iframe{width:100%;height:70vh;border:1px solid var(--line)}#m img{width:min(520px,100%);image-rendering:pixelated;display:block;margin:auto}
 #gate{width:min(340px,100%);margin:0;text-align:center}.sm{font-size:12px;word-break:break-all}
 @media(max-width:980px){.fl{grid-template-columns:1fr}.sum{position:static}}
 @media(max-width:820px){aside{position:fixed;bottom:0;left:0;right:0;top:auto;width:100%;height:auto;flex-direction:row;padding:0;z-index:5}aside b,aside small{display:none}
@@ -132,12 +132,12 @@ const b64=u=>btoa(String.fromCharCode(...u)).replace(/\+/g,'-').replace(/\//g,'_
 const zip=async(s,c)=>new Uint8Array(await new Response(new Blob([s]).stream().pipeThrough(new(c?CompressionStream:DecompressionStream)('deflate-raw'))).arrayBuffer());
 const link=async d=>location.href.split('#')[0]+'#d='+b64(await zip(JSON.stringify({...d,ids:0}),1));
 const unlink=async s=>JSON.parse(new TextDecoder().decode(await zip(Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0)),0)));
-function qrPng(u,px=5){const q=qrcode(0,'M');q.addData(u);q.make();const n=q.getModuleCount(),c=document.createElement('canvas'),t=c.getContext('2d');c.width=c.height=(n+4)*px;t.fillStyle='#fff';t.fillRect(0,0,c.width,c.height);t.fillStyle='#000';
+function qrPng(u,px=5){const q=qrcode(0,'L');q.addData(u);q.make();const n=q.getModuleCount(),c=document.createElement('canvas'),t=c.getContext('2d');c.width=c.height=(n+4)*px;t.fillStyle='#fff';t.fillRect(0,0,c.width,c.height);t.fillStyle='#000';
 for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(q.isDark(r,k))t.fillRect((k+2)*px,(r+2)*px,px,px);return c.toDataURL('image/png')}
 const modal=h=>{$('#mb').innerHTML=h;$('#m').style.display='flex'},closeM=()=>$('#m').style.display='none';
 async function showQr(id){const d=rows('decas').find(x=>x.id===id),u=await link(d);let img;
 try{img=qrPng(u)}catch(e){return modal('<p>Este DeCA tiene demasiados datos para el QR de la demo. En la versión con backend el QR solo llevará una URL corta.</p><button onclick=closeM()>Cerrar</button>')}
-window._u=u;modal(`<h2>${d.numero}</h2><img src="${img}" alt="QR del DeCA"><p class="sm mut">Al escanearlo se abre el PDF. En la demo el enlace lleva los datos dentro; con backend será una URL corta.</p><p><button onclick="navigator.clipboard.writeText(_u)">Copiar enlace</button> <button class=s onclick="window.open(_u)">Abrir enlace</button> <button class=s onclick=closeM()>Cerrar</button></p>`)}
+window._u=u;modal(`<h2>${d.numero}</h2><img src="${img}" alt="QR del DeCA">${location.protocol==='file:'?'<p class=err style="display:block">Has abierto el archivo desde tu ordenador: el móvil no podrá abrir este QR. Sube el index.html a EasyPanel y genera el DeCA desde esa dirección.</p>':''}<p class="sm mut">Al escanearlo se abre el PDF. En la demo el enlace lleva los datos dentro; con backend será una URL corta.</p><p><button onclick="navigator.clipboard.writeText(_u)">Copiar enlace</button> <button class=s onclick="window.open(_u)">Abrir enlace</button> <button class=s onclick=closeM()>Cerrar</button></p>`)}
 // ===== PDF nativo (jsPDF): texto seleccionable + QR =====
 const FL={rol:'Rol',cargador:'Cargador',transportista:'Transportista',fecha:'Fecha',matricula:'Matrícula',remolque:'Remolque',conductor:'Conductor',aut:'Autorización especial',obs:'Observaciones',envios:'Envíos'};
 const fv=(k,x)=>k==='envios'?x.envios.map(e=>`${e.origen}-${e.destino} ${e.naturaleza} ${e.pesoKg}kg`).join(' | '):(k==='cargador'||k==='transportista')?`${x[k].nombre} ${x[k].nif}`:x[k]||'(vacío)';
@@ -167,7 +167,8 @@ modal(`<iframe src="${cur.output('bloburl')}" title="PDF"></iframe><p><button on
 // ===== Arranque: enlace del QR (sin login) o app con clave =====
 async function boot(){const h=location.hash;
 if(h.startsWith('#d=')){try{const d=await unlink(h.slice(3)),doc=pdf(d,null,location.href);cur=doc;
-$('#app').innerHTML=`<iframe src="${doc.output('bloburl')}" style="position:fixed;inset:0 0 52px;width:100%;height:calc(100% - 52px);border:0"></iframe><p style="position:fixed;bottom:0;margin:0;padding:10px;width:100%;background:#fff"><button onclick="cur.save('${d.numero}.pdf')">Descargar PDF</button></p>`}catch(e){$('#app').innerHTML='<p style="padding:20px">Enlace no válido.</p>'}return}
+const bu=doc.output('bloburl'),bt='display:block;text-align:center;padding:12px;border-radius:6px;font:600 15px system-ui;text-decoration:none;margin-top:10px';
+$('#app').innerHTML=`<div id=lg><div class=card id=gate><h2>${d.numero}</h2><p class=mut>Documento electrónico de control administrativo</p><a href="${bu}" target=_blank rel=noopener style="${bt};background:#0fa37f;color:#fff">Abrir PDF</a><a href="#" onclick="cur.save('${d.numero}.pdf');return false" style="${bt};border:1px solid #0fa37f;color:#0b7f62">Descargar PDF</a></div></div>`}catch(e){$('#app').innerHTML='<p style="padding:20px">Enlace no válido.</p>'}return}
 if(sessionStorage.ok)return start();
 $('#app').innerHTML=`<div id=lg>${HERO}<div id=gate class=card><h2>DeCA Gestión</h2><p class=mut>Acceso a la demo</p><input id=pw type=password placeholder="Clave"><p><button onclick="if($('#pw').value===CLAVE){sessionStorage.ok=1;start()}else $('#pw').style.borderColor='#b3261e'">Entrar</button></p></div></div>`;
 $('#pw').addEventListener('keydown',e=>{if(e.key==='Enter')e.target.nextElementSibling.firstElementChild.click()})}
